@@ -5,7 +5,7 @@ import './style.css';
 class Pacman extends Component {
 
     state = {
-        direction: 'right',
+        direction: 'down',
         position: {
             top: 0,
             left: 0
@@ -26,13 +26,16 @@ class Pacman extends Component {
     } 
 
     render() {
+
+        const {direction, position} = this.state;
+
         return( 
             <div
             ref={this.pacmanRef} 
-            className="pacman"
+            className={`pacman pacman-${direction}`}
             tabIndex="0"
             onKeyDown={this.handleKeyDown}
-            style={this.state.position}
+            style={position}
             >
                 <PacmanSvg/>
             </div>
