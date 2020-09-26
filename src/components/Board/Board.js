@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './style.css';
 
 import Pacman from '../Pacman/Pacman';
+import Ghost from '../Ghost/Ghost';
 
 class Board extends Component {
     render() {
@@ -9,7 +10,7 @@ class Board extends Component {
             <div className="board">
                 {/* <Food></Food> */}
                 <Pacman/>
-                {/* <Ghost></Ghost> */}
+                <Ghost></Ghost>
                 {/* <Ghost></Ghost> */}
             </div>
         )
