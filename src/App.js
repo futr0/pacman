@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import Header from './components/Header';
+import Header from './components/Header/Header';
+import Board from './components/Board';
 import './App.css';
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
       <Header score={score}>
 
       </Header>
+      <Board></Board>
     </div>
   );
 }
