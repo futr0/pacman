@@ -8,10 +8,8 @@ function App() {
   return (
     <div className="App">
       {score}
-      <Header score={score}>
-
-      </Header>
-      <Board></Board>
+      <Header score={score}/>
+      <Board/>
     </div>
   );
 }
