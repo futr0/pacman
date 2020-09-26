@@ -23,6 +23,33 @@ class Pacman extends Component {
 
     handleKeyDown = (event) => {
         console.log(event.keyCode, event.key);
+
+        const currentTop = this.state.position.top;
+        const currentLeft = this.state.position.left;
+
+        if(event.key === 'ArrowUp') {
+            this.setState({
+                direction: 'up'
+            })
+
+        }
+        else if (event.key === 'ArrowDown') {
+            this.setState({
+                direction: 'down'
+            })
+        }
+
+        else if (event.key === 'ArrowRight') {
+            this.setState({
+                direction: 'right'
+            })
+        }
+
+        else if (event.key === 'ArrowLeft') {
+            this.setState({
+                direction: 'left'
+            })
+        }
     } 
 
     render() {
