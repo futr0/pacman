@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {config, charactersParams} from '../../helpers/config'
+import {config, charactersParams, selectRandomColor} from '../../helpers/config'
 import Pacman from '../Pacman';
 import Ghost from '../Ghost';
 import Food from '../Food';
@@ -136,7 +136,7 @@ class Board extends Component {
       ghosts.push(
         <Ghost
         key={`ghost-elem-${i}`}
-        color='pink'
+        color={selectRandomColor()}
         ref={this[this.ghostElementName + i]}
         />
       )

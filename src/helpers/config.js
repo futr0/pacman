@@ -11,3 +11,9 @@ export function charactersParams() {
         size: 50 //character size 50x50 px
     };
 }
+
+export function selectRandomColor() {
+    var colors = ['yellow', 'red', 'blue'];
+    var index = Math.floor(Math.random() * colors.length);
+    return colors[index];
+}
