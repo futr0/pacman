@@ -9,28 +9,17 @@ class Board extends Component {
 
   constructor(props) {
     super(props);
-
     this.pacmanRef = React.createRef();
-
     this.foods = [];
     this.ghosts = [];
     this.amountOfGhosts = 1;
-    this.amountOfFood = (
-      (window.innerWidth - this.props.foodSize)
-      * (window.innerHeight - this.props.topScoreBoardHeight)
-    ) / (this.props.foodSize * this.props.foodSize) - 1;
-
-    for (let i = 0; i < this.amountOfFood; i++) {
-      this['food' + i] = React.createRef();
-    }
-
-    for (let i = 0; i < this.amountOfGhosts; i++) {
-      this['ghost' + i] = React.createRef();
-    }
+    this.amountOfFood = this.calculateAmountOfFood();
+    this.populateElementArray('food',this.amountOfFood);
+    this.populateElementArray('ghost', this.amountOfGhosts);
   }
 
   componentDidMount() {
-    this.intervalFood = setInterval(this.lookForFood, 100);
+    this.intervalFood = setInterval(this.detectFoodCollision, 100);
     this.detectGhostCollision = setInterval(this.detectGhostCollision, 100);
   }
 
@@ -39,41 +28,67 @@ class Board extends Component {
     clearInterval(this.detectGhostCollision);
   }
 
+  detectFoodCollision = () => {
+    this.detectCollision('food');
+  }
+
   detectGhostCollision = () => {
-    const pacmanX = this.pacmanRef.current.state.position.left;
-    const pacmanY = this.pacmanRef.current.state.position.top;
-    const pacmanSize = this.pacmanRef.current.props.size
+    this.detectCollision('ghost');
+  }
 
-    const pacmanLastX = pacmanX + pacmanSize / 2;
-    const pacmanLastY = pacmanY + pacmanSize / 2;
+  detectCollision = (elementType) => {
+    var coords = this.getPacmanCoords();
+    var element = elementType.toString();
+    var amount = element === 'food'? this.amountOfFood : this.amountOfGhosts;
 
-    for (let i = 0; i <= this.amountOfGhosts; i++) {
-      if (this['ghost' + i]) {
-        const currentGhost = this['ghost' + i].current;
-        if (currentGhost) {
-          const currentGhostX = currentGhost.state.position.left;
-          const currentGhostY = currentGhost.state.position.top;
-          const currentGhostSize = currentGhost.props.size;
-          const currentGhostLastX = currentGhostX + currentGhostSize / 2;
-          const currentGhostLastY = currentGhostY + currentGhostSize / 2;
+    for (let i = 0; i <= amount; i++) {
+      if(this[`${element}` + i]) {
+        const currentElem = this[`${element}` + i].current;
+        if (currentElem) {
+          const currentElemX = currentElem.state.position.left;
+          const currentElemY = currentElem.state.position.top;
+          const currentElemSize = element === 'food'? currentElem.props.foodSize :
+           currentElem.props.size;
+          const currentElemLastX = currentElemX + currentElemSize / 2;
+          const currentElemLastY = currentElemY + currentElemSize / 2;
   
           if (
-            (pacmanX >= currentGhostX && pacmanX <= currentGhostLastX)
-            || (pacmanLastX >= currentGhostX && pacmanLastX <= currentGhostLastX)) {
-            if ((pacmanY >= currentGhostY && pacmanY <= currentGhostLastY)
-              || (pacmanLastY >= currentGhostY && pacmanLastY <= currentGhostLastY)) {
-              if (!this.pacmanRef.current.state.hidden) {
-                this.pacmanRef.current.wasKilled(); // !hidden
-              }
+            (coords.pacmanX >= currentElemX && coords.pacmanX <= currentElemLastX)
+            || (coords.pacmanLastX >= currentElemX && coords.pacmanLastX <= currentElemLastX)) {
+            if ((coords.pacmanY >= currentElemY && coords.pacmanY <= currentElemLastY)
+              || (coords.pacmanLastY >= currentElemY && coords.pacmanLastY <= currentElemLastY)) {
+                 if (element === 'ghost') {
+                    if (!this.pacmanRef.current.state.hidden) {
+                      this.pacmanRef.current.wasKilled();
+                    }
+                  }
+                  if (elementType === 'food') {
+                    if (!currentElem.state.hidden) {
+                      currentElem.wasEaten();
+                      this.props.setScore((value) => value + 1)
+                    }
+                  }
             }
           }
         }
-
       }
     }
   }
 
-  lookForFood = () => {
+  populateElementArray(type, amount) {
+    for (let i = 0; i < amount; i++) {
+      this[`${type.toString()}` + i] = React.createRef();
+    }
+  }
+
+  calculateAmountOfFood() {
+    return (
+      (window.innerWidth - this.props.foodSize)
+      * (window.innerHeight - this.props.topScoreBoardHeight)
+    ) / (this.props.foodSize * this.props.foodSize) - 1;
+  }
+
+  getPacmanCoords() {
     const pacmanX = this.pacmanRef.current.state.position.left;
     const pacmanY = this.pacmanRef.current.state.position.top;
     const pacmanSize = this.pacmanRef.current.props.size
@@ -81,29 +96,12 @@ class Board extends Component {
     const pacmanLastX = pacmanX + pacmanSize / 2;
     const pacmanLastY = pacmanY + pacmanSize / 2;
 
-    for (let i = 0; i <= this.amountOfFood; i++) {
-      const currentFood = this['food' + i].current;
-      if (currentFood) {
-        const currentFoodX = currentFood.state.position.left;
-        const currentFoodY = currentFood.state.position.top;
-        const currentFoodSize = currentFood.props.foodSize;
-        const currentFoodLastX = currentFoodX + currentFoodSize / 2;
-        const currentFoodLastY = currentFoodY + currentFoodSize / 2;
-
-        if (
-          (pacmanX >= currentFoodX && pacmanX <= currentFoodLastX)
-          || (pacmanLastX >= currentFoodX && pacmanLastX <= currentFoodLastX)) {
-          if ((pacmanY >= currentFoodY && pacmanY <= currentFoodLastY)
-            || (pacmanLastY >= currentFoodY && pacmanLastY <= currentFoodLastY)) {
-            if (!currentFood.state.hidden) {
-              currentFood.wasEaten(); // !hidden
-              // this.props.increase(); // increase score
-              this.props.setScore((value) => value + 1)
-            }
-          }
-        }
-      }
-    }
+    return {
+      pacmanX,
+      pacmanY,
+      pacmanLastX,
+      pacmanLastY
+    };
   }
 
   render() {
