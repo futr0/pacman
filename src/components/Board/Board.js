@@ -21,6 +21,10 @@ class Board extends Component {
     this.populateElementArray(this.ghostElementName, this.amountOfGhosts);
   }
 
+  state = {
+    gameOver: false
+  }
+
   componentDidMount() {
     this.intervalFood = setInterval(this.detectFoodCollision, 100);
     this.detectGhostCollision = setInterval(this.detectGhostCollision, 100);
@@ -40,6 +44,7 @@ class Board extends Component {
   }
 
   detectCollision = (elementType) => {
+    if(!this.state.gameOver) {
     var pacmanRef = this.pacmanRef.current;
     var pacmanCoords = this.getElementCoords('', pacmanRef);
     var element = elementType.toString();
@@ -58,12 +63,13 @@ class Board extends Component {
                 if (element === this.ghostElementName) {
                     if (!pacmanRef.state.hidden) {
                       this.pacmanRef.current.wasKilled();
+                      this.setGameOver();
                     }
                   }
                   else {
                     if (!currentElem.state.hidden) {
                       currentElem.wasEaten();
-                      this.props.setScore((value) => value + 1)
+                      this.props.setScore((value) => value + 1);
                       this.eatenElements += 1;
                     }
                   }
@@ -71,6 +77,7 @@ class Board extends Component {
           }
         }
       }
+    }
     }
   }
 
@@ -104,7 +111,12 @@ class Board extends Component {
     };
   }
 
+  setGameOver() {
+    this.setState({ gameOver: !this.gameOver });
+  }
+
   render() {
+    const { gameOver } = this.state;
     const { foodSize, border, topScoreBoardHeight } = this.props;
     let foods = [];
     let ghosts = [];
@@ -141,7 +153,8 @@ class Board extends Component {
         />
       )
     }
-
+    
+    if (gameOver) return <div>Game Over!</div>;
     return (
       <div className="board">
         {foods}

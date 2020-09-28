@@ -7,7 +7,6 @@ function App() {
   const [score, setScore] = useState(0);
   return (
     <div className="App">
-      {score}
       <Header score={score}/>
       <Board setScore={setScore}/>
     </div>

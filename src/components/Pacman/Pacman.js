@@ -67,14 +67,11 @@ class Pacman extends Component {
     } 
 
     wasKilled() {
-        console.log("Pacman was killed");
         this.setState({ hidden: !this.hidden });
       }
 
     render() {
-
         const {direction, position, hidden} = this.state;
-
         return( 
             <div
             ref={this.pacmanRef} 
