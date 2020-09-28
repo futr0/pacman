@@ -10,12 +10,14 @@ class Board extends Component {
   constructor(props) {
     super(props);
     this.pacmanRef = React.createRef();
+    this.foodElementName = 'food';
+    this.ghostElementName = 'ghost';
     this.foods = [];
     this.ghosts = [];
     this.amountOfGhosts = 1;
     this.amountOfFood = this.calculateAmountOfFood();
-    this.populateElementArray('food',this.amountOfFood);
-    this.populateElementArray('ghost', this.amountOfGhosts);
+    this.populateElementArray(this.foodElementName,this.amountOfFood);
+    this.populateElementArray(this.ghostElementName, this.amountOfGhosts);
   }
 
   componentDidMount() {
@@ -29,40 +31,35 @@ class Board extends Component {
   }
 
   detectFoodCollision = () => {
-    this.detectCollision('food');
+    this.detectCollision(this.foodElementName);
   }
 
   detectGhostCollision = () => {
-    this.detectCollision('ghost');
+    this.detectCollision(this.ghostElementName);
   }
 
   detectCollision = (elementType) => {
-    var coords = this.getPacmanCoords();
+    var pacmanRef = this.pacmanRef.current;
+    var pacmanCoords = this.getElementCoords('', pacmanRef);
     var element = elementType.toString();
-    var amount = element === 'food'? this.amountOfFood : this.amountOfGhosts;
+    var amount = element === this.foodElementName? this.amountOfFood : this.amountOfGhosts;
 
     for (let i = 0; i <= amount; i++) {
       if(this[`${element}` + i]) {
         const currentElem = this[`${element}` + i].current;
         if (currentElem) {
-          const currentElemX = currentElem.state.position.left;
-          const currentElemY = currentElem.state.position.top;
-          const currentElemSize = element === 'food'? currentElem.props.foodSize :
-           currentElem.props.size;
-          const currentElemLastX = currentElemX + currentElemSize / 2;
-          const currentElemLastY = currentElemY + currentElemSize / 2;
-  
+          var elementCoords = this.getElementCoords(element, currentElem)
           if (
-            (coords.pacmanX >= currentElemX && coords.pacmanX <= currentElemLastX)
-            || (coords.pacmanLastX >= currentElemX && coords.pacmanLastX <= currentElemLastX)) {
-            if ((coords.pacmanY >= currentElemY && coords.pacmanY <= currentElemLastY)
-              || (coords.pacmanLastY >= currentElemY && coords.pacmanLastY <= currentElemLastY)) {
-                 if (element === 'ghost') {
-                    if (!this.pacmanRef.current.state.hidden) {
+            (pacmanCoords.elementX >= elementCoords.elementX && pacmanCoords.elementX <= elementCoords.elementLastX)
+            || (pacmanCoords.elementLastX >= elementCoords.elementX && element.pacmanLastX <= elementCoords.elementLastX)) {
+            if ((pacmanCoords.elementY >= elementCoords.elementY && pacmanCoords.elementY <= elementCoords.elementLastY)
+              || (pacmanCoords.elementLastY >= elementCoords.elementY && pacmanCoords.elementLastY <= elementCoords.elementLastY)) {
+                if (element === this.ghostElementName) {
+                    if (!pacmanRef.state.hidden) {
                       this.pacmanRef.current.wasKilled();
                     }
                   }
-                  if (elementType === 'food') {
+                  else {
                     if (!currentElem.state.hidden) {
                       currentElem.wasEaten();
                       this.props.setScore((value) => value + 1)
@@ -88,19 +85,20 @@ class Board extends Component {
     ) / (this.props.foodSize * this.props.foodSize) - 1;
   }
 
-  getPacmanCoords() {
-    const pacmanX = this.pacmanRef.current.state.position.left;
-    const pacmanY = this.pacmanRef.current.state.position.top;
-    const pacmanSize = this.pacmanRef.current.props.size
-
-    const pacmanLastX = pacmanX + pacmanSize / 2;
-    const pacmanLastY = pacmanY + pacmanSize / 2;
+  getElementCoords(name, elementRef) {
+    var element = name.toString();
+    const elementX = elementRef.state.position.left;
+    const elementY = elementRef.state.position.top;
+    const elementSize = element === this.foodElementName? elementRef.props.foodSize :
+    elementRef.props.size;
+    const elementLastX = elementX + elementSize / 2;
+    const elementLastY = elementY + elementSize / 2;
 
     return {
-      pacmanX,
-      pacmanY,
-      pacmanLastX,
-      pacmanLastY
+      elementX,
+      elementY,
+      elementLastX,
+      elementLastY
     };
   }
 
@@ -127,7 +125,7 @@ class Board extends Component {
         <Food
           key={`food-elem-${i}`}
           position={position}
-          ref={this['food' + i]}
+          ref={this[this.foodElementName + i]}
         />
       );
     }
@@ -137,7 +135,7 @@ class Board extends Component {
         <Ghost
         key={`ghost-elem-${i}`}
         color='pink'
-        ref={this['ghost' + i]}
+        ref={this[this.ghostElementName + i]}
         />
       )
     }
