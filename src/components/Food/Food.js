@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {charactersParams} from '../../helpers/config'
 
 import './style.css';
 
@@ -12,7 +13,7 @@ class Food extends Component {
   }
 
   wasEaten() {
-      this.setState({hidden: !this.hidden});
+    this.setState({ hidden: !this.hidden });
   }
 
   render() {
@@ -26,7 +27,7 @@ class Food extends Component {
 }
 
 Food.defaultProps = {
-  foodSize: 50,
+  foodSize: charactersParams().size,
   position: { top: 0, left: 0 }
 }
 

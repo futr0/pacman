@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { ReactComponent as PacmanSvg } from './pacman.svg';
+import {config, charactersParams} from '../../helpers/config'
 import './style.css';
 
 class Pacman extends Component {
@@ -83,11 +84,10 @@ class Pacman extends Component {
 }
 
 Pacman.defaultProps = {
-    step: 50,
-    size: 50, //pacman size 50x50 px
-    // TODO: move to config
-    border: 10 * 2, //2 * border from Border css
-    topScoreBoardHeight: 50
+    step: charactersParams().step,
+    size: charactersParams().size,
+    border: config().border,
+    topScoreBoardHeight: config().topScoreBoardHeight
 }
 
 export default Pacman;

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { ReactComponent as GhostSvg } from './ghost.svg';
+import {config, charactersParams} from '../../helpers/config'
 import './style.css'
 
 class Ghost extends Component {
@@ -84,11 +85,10 @@ class Ghost extends Component {
 
 Ghost.defaultProps = {
     color: 'yellow',
-    step: 50,
-    size: 50, //ghost size 50x50 px
-    // TODO: move to config
-    border: 10 * 2, //2 * border from Border css
-    topScoreBoardHeight: 50
+    step: charactersParams().step,
+    size: charactersParams().size,
+    border: config().border,
+    topScoreBoardHeight: config().topScoreBoardHeight
 }
 
 export default Ghost;
