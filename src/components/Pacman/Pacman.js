@@ -10,7 +10,8 @@ class Pacman extends Component {
         position: {
             top: 0,
             left: 0
-        }
+        },
+        hidden: false
     }
 
     constructor(props) {
@@ -65,14 +66,19 @@ class Pacman extends Component {
         }
     } 
 
+    wasKilled() {
+        console.log("Pacman was killed");
+        this.setState({ hidden: !this.hidden });
+      }
+
     render() {
 
-        const {direction, position} = this.state;
+        const {direction, position, hidden} = this.state;
 
         return( 
             <div
             ref={this.pacmanRef} 
-            className={`pacman pacman-${direction}`}
+            className={hidden ? `pacman hidden` : `pacman pacman-${direction}`}
             tabIndex="0"
             onKeyDown={this.handleKeyDown}
             style={position}
