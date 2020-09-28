@@ -18,8 +18,9 @@ class Food extends Component {
 
   render() {
     const { position, hidden } = this.state;
+    if (hidden === true) return null;
     return (
-      <div style={position} className={hidden ? 'food hidden' : 'food'}>
+      <div style={position} className='food'>
         <div className="food-dot"></div>
       </div>
     );

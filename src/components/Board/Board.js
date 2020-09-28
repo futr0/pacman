@@ -14,7 +14,8 @@ class Board extends Component {
     this.ghostElementName = 'ghost';
     this.foods = [];
     this.ghosts = [];
-    this.amountOfGhosts = 1;
+    this.eatenElements = 0;
+    this.amountOfGhosts = 3;
     this.amountOfFood = this.calculateAmountOfFood();
     this.populateElementArray(this.foodElementName,this.amountOfFood);
     this.populateElementArray(this.ghostElementName, this.amountOfGhosts);
@@ -42,7 +43,7 @@ class Board extends Component {
     var pacmanRef = this.pacmanRef.current;
     var pacmanCoords = this.getElementCoords('', pacmanRef);
     var element = elementType.toString();
-    var amount = element === this.foodElementName? this.amountOfFood : this.amountOfGhosts;
+    var amount = element === this.foodElementName? this.calculateAmountOfFood() : this.amountOfGhosts;
 
     for (let i = 0; i <= amount; i++) {
       if(this[`${element}` + i]) {
@@ -63,6 +64,7 @@ class Board extends Component {
                     if (!currentElem.state.hidden) {
                       currentElem.wasEaten();
                       this.props.setScore((value) => value + 1)
+                      this.eatenElements += 1;
                     }
                   }
             }
@@ -82,7 +84,7 @@ class Board extends Component {
     return (
       (window.innerWidth - this.props.foodSize)
       * (window.innerHeight - this.props.topScoreBoardHeight)
-    ) / (this.props.foodSize * this.props.foodSize) - 1;
+    ) / (this.props.foodSize * this.props.foodSize) - 1 - this.eatenElements;
   }
 
   getElementCoords(name, elementRef) {
