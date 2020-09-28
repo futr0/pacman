@@ -73,6 +73,13 @@ class Ghost extends Component {
         }
     }
 
+    // generateStartPosition() {
+    //     return {
+    //         top: Math.floor(Math.random()(window.innerHeight - border - size - topScoreBoardHeight));
+    //         left:
+    //     }
+    // }
+
     render() {
         const {color} = this.props;
         return(

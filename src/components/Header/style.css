@@ -1,7 +1,10 @@
 .header {
     height: 50px;
-    background-color:black;
-    color: white;
     padding-left: 10px;
     padding-right: 10px;
+    font-size: 30px;
+    text-align: center;
+    text-shadow: 4px 4px 0px #922410;
+    mix-blend-mode: screen;
+    animation: fadeIn 2.5s linear forwards;
   }

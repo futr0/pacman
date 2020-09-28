@@ -1,6 +1,6 @@
 export function config() {
     return {
-        border: 10 * 2, //2 * border from Border css,
+        border: 5 * 2, //2 * border from Border css,
         topScoreBoardHeight: 50
     };
 }

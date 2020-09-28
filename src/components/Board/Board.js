@@ -154,7 +154,8 @@ class Board extends Component {
       )
     }
     
-    if (gameOver) return <div>Game Over!</div>;
+    if (gameOver) return <div class='text-box'>
+      <h1>Game Over!</h1></div>;
     return (
       <div className="board">
         {foods}
