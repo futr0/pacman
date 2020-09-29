@@ -1,6 +1,6 @@
-export function config() {
+export function gameScreenParams() {
     return {
-        border: 5 * 2, //2 * border from Border css,
+        border: 10 * 2, //2 * border from Border css,
         topScoreBoardHeight: 50
     };
 }
@@ -27,7 +27,7 @@ export function selectRandomPosition(positions) {
 }
 
 export function returnTabName() {
-    return 'Pacman - Simple React Game';
+    return 'Pacman - React Game';
 }
 
 function returnRandomIndex(len) {

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { ReactComponent as PacmanSvg } from './pacman.svg';
-import {config, charactersParams} from '../../helpers/config'
+import {gameScreenParams, charactersParams} from '../../helpers/config'
 import './style.css';
 
 class Pacman extends Component {
@@ -89,8 +89,8 @@ class Pacman extends Component {
 Pacman.defaultProps = {
     step: charactersParams().step,
     size: charactersParams().size,
-    border: config().border,
-    topScoreBoardHeight: config().topScoreBoardHeight
+    border: gameScreenParams().border,
+    topScoreBoardHeight: gameScreenParams().topScoreBoardHeight
 }
 
 export default Pacman;

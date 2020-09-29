@@ -1,7 +1,7 @@
 .board {
     position: relative;
     background: #1c1f24;
-    border: 5px rgba(141, 17, 17, 0.322) solid;
+    border: 10px rgba(141, 17, 17, 0.322) solid;
     height: calc(100vh - 50px - 10px - 10px);
     width: calc(100vw - 10px - 10px);
   }

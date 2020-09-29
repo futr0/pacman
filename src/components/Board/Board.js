@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {config, charactersParams, selectRandomColor, selectRandomPosition, returnTabName}
+import {gameScreenParams, charactersParams, selectRandomColor, selectRandomPosition, returnTabName}
  from '../../helpers/config'
 import Pacman from '../Pacman';
 import Ghost from '../Ghost';
@@ -16,14 +16,16 @@ class Board extends Component {
     this.foods = [];
     this.ghosts = [];
     this.eatenElements = 0;
-    this.amountOfGhosts = 20;
     this.amountOfFood = this.calculateAmountOfFood();
+    this.amountOfGhosts = this.calculateAmountOfGhosts(this.amountOfFood);
+    this.elementsToWinAmount = this.amountOfFood;
     this.populateElementArray(this.foodElementName,this.amountOfFood);
     this.populateElementArray(this.ghostElementName, this.amountOfGhosts);
   }
 
   state = {
-    gameOver: false
+    gameOver: false,
+    gameWin: false
   }
 
   componentDidMount() {
@@ -46,7 +48,7 @@ class Board extends Component {
   }
 
   detectCollision = (elementType) => {
-    if(!this.state.gameOver) {
+    if(!this.state.gameOver && !this.state.gameWin) {
     var pacmanRef = this.pacmanRef.current;
     var pacmanCoords = this.getElementCoords('', pacmanRef);
     var element = elementType.toString();
@@ -73,6 +75,7 @@ class Board extends Component {
                       currentElem.wasEaten();
                       this.props.setScore((value) => value + 1);
                       this.eatenElements += 1;
+                      this.checkForVictory();
                     }
                   }
             }
@@ -96,6 +99,11 @@ class Board extends Component {
     ) / (this.props.foodSize * this.props.foodSize) - 1 - this.eatenElements;
   }
 
+  calculateAmountOfGhosts(amountOfFood) {
+    const divisor = 12;
+    return parseInt(amountOfFood/divisor);
+  }
+
   getElementCoords(name, elementRef) {
     var element = name.toString();
     const elementX = elementRef.state.position.left;
@@ -117,12 +125,18 @@ class Board extends Component {
     this.setState({ gameOver: !this.gameOver });
   }
 
-  render() {
-    const { gameOver } = this.state;
+  setGameWin() {
+    this.setState({ gameWin: !this.gameWin });
+  }
+  
+  checkForVictory() {
+    if(this.elementsToWinAmount === this.eatenElements) {
+      this.setGameWin();
+    }
+  }
+
+  generateFoodsArray(foods, positions) {
     const { foodSize, border, topScoreBoardHeight } = this.props;
-    let foods = [];
-    let ghosts = [];
-    let positions = [];
     let currentTop = 0;
     let currentLeft = 1 * foodSize;
 
@@ -131,11 +145,10 @@ class Board extends Component {
         currentTop += this.props.foodSize;
         currentLeft = 0;
       }
-
+      
       if (currentTop + foodSize >= (window.innerHeight - border - topScoreBoardHeight )) {
         break;
       }
-
       const position = { left: currentLeft, top: currentTop };
       currentLeft += foodSize;
       foods.push(
@@ -145,10 +158,15 @@ class Board extends Component {
           ref={this[this.foodElementName + i]}
         />
       );
-
       positions.push(position);
     }
+    return {
+      foods,
+      positions
+    };
+  }
 
+  generateGhostsArray(ghosts, positions) {
     for (let i = 0; i <this.amountOfGhosts; i++) {
       ghosts.push(
         <Ghost
@@ -159,7 +177,22 @@ class Board extends Component {
         />
       )
     }
-    
+    return ghosts;
+  }
+
+  render() {
+    const { gameOver, gameWin } = this.state;
+    let foods = [];
+    let ghosts = [];
+    let positions = [];
+
+    var foodsData = this.generateFoodsArray(foods, positions);
+    foods = foodsData.foods;
+    positions = foodsData.positions;
+    ghosts = this.generateGhostsArray(ghosts, positions);
+
+    if (gameWin) return <div className='text-box'>
+    <h1>Victory :) Congratulations!</h1></div>;
     if (gameOver) return <div className='text-box'>
       <h1>Game Over!</h1></div>;
     return (
@@ -174,8 +207,8 @@ class Board extends Component {
 
 Board.defaultProps = {
   foodSize: charactersParams().size,
-  border: config().border,
-  topScoreBoardHeight: config().topScoreBoardHeight
+  border: gameScreenParams().border,
+  topScoreBoardHeight: gameScreenParams().topScoreBoardHeight
 }
 
 export default Board;

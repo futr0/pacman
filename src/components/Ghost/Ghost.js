@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { ReactComponent as GhostSvg } from './ghost.svg';
-import {config, charactersParams} from '../../helpers/config'
+import {gameScreenParams, charactersParams} from '../../helpers/config'
 import './style.css'
 
 class Ghost extends Component {
@@ -73,13 +73,6 @@ class Ghost extends Component {
         }
     }
 
-    // generateStartPosition() {
-    //     return {
-    //         top: Math.floor(Math.random()(window.innerHeight - border - size - topScoreBoardHeight));
-    //         left:
-    //     }
-    // }
-
     render() {
         const {color} = this.props;
         return(
@@ -95,8 +88,8 @@ Ghost.defaultProps = {
     step: charactersParams().step,
     size: charactersParams().size,
     position: { top: 50 * 3, left: 50 * 3 },
-    border: config().border,
-    topScoreBoardHeight: config().topScoreBoardHeight
+    border: gameScreenParams().border,
+    topScoreBoardHeight: gameScreenParams().topScoreBoardHeight
 }
 
 export default Ghost;
