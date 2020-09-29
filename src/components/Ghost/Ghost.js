@@ -8,8 +8,8 @@ class Ghost extends Component {
     state = {
         direction: 'left',
         position: {
-            top: 50 * 3,
-            left: 50 * 3
+            top: this.props.position.top,
+            left: this.props.position.left
         }
     }
 
@@ -94,6 +94,7 @@ Ghost.defaultProps = {
     color: 'yellow',
     step: charactersParams().step,
     size: charactersParams().size,
+    position: { top: 50 * 3, left: 50 * 3 },
     border: config().border,
     topScoreBoardHeight: config().topScoreBoardHeight
 }

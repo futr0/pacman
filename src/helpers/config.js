@@ -14,6 +14,23 @@ export function charactersParams() {
 
 export function selectRandomColor() {
     var colors = ['yellow', 'red', 'blue'];
-    var index = Math.floor(Math.random() * colors.length);
+    var index = returnRandomIndex(colors.length);
     return colors[index];
+}
+
+export function selectRandomPosition(positions) {
+    var position = positions[returnRandomIndex(positions.length)];
+    return {
+        top: position.top,
+        left: position.left
+    };
+}
+
+export function returnTabName() {
+    return 'Pacman - Simple React Game';
+}
+
+function returnRandomIndex(len) {
+    var index = Math.floor(Math.random() * len);
+    return index
 }

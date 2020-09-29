@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import {config, charactersParams, selectRandomColor} from '../../helpers/config'
+import {config, charactersParams, selectRandomColor, selectRandomPosition, returnTabName}
+ from '../../helpers/config'
 import Pacman from '../Pacman';
 import Ghost from '../Ghost';
 import Food from '../Food';
@@ -15,7 +16,7 @@ class Board extends Component {
     this.foods = [];
     this.ghosts = [];
     this.eatenElements = 0;
-    this.amountOfGhosts = 3;
+    this.amountOfGhosts = 20;
     this.amountOfFood = this.calculateAmountOfFood();
     this.populateElementArray(this.foodElementName,this.amountOfFood);
     this.populateElementArray(this.ghostElementName, this.amountOfGhosts);
@@ -26,6 +27,7 @@ class Board extends Component {
   }
 
   componentDidMount() {
+    document.title = returnTabName();
     this.intervalFood = setInterval(this.detectFoodCollision, 100);
     this.detectGhostCollision = setInterval(this.detectGhostCollision, 100);
   }
@@ -120,6 +122,7 @@ class Board extends Component {
     const { foodSize, border, topScoreBoardHeight } = this.props;
     let foods = [];
     let ghosts = [];
+    let positions = [];
     let currentTop = 0;
     let currentLeft = 1 * foodSize;
 
@@ -142,6 +145,8 @@ class Board extends Component {
           ref={this[this.foodElementName + i]}
         />
       );
+
+      positions.push(position);
     }
 
     for (let i = 0; i <this.amountOfGhosts; i++) {
@@ -150,11 +155,12 @@ class Board extends Component {
         key={`ghost-elem-${i}`}
         color={selectRandomColor()}
         ref={this[this.ghostElementName + i]}
+        position={selectRandomPosition(positions)}
         />
       )
     }
     
-    if (gameOver) return <div class='text-box'>
+    if (gameOver) return <div className='text-box'>
       <h1>Game Over!</h1></div>;
     return (
       <div className="board">
